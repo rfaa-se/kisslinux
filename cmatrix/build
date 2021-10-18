@@ -1,0 +1,11 @@
+#!/bin/sh -e
+
+autoreconf -i
+./configure \
+    --prefix=/usr \
+	--sbindir=/usr/bin \
+	--sysconfdir=/etc \
+	--without-fonts
+
+make
+make install
