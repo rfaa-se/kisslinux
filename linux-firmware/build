@@ -1,0 +1,7 @@
+#!/bin/sh -e
+
+mkdir -p "$1/usr/lib/firmware/radeon"
+cp radeon/PALM_me.bin "$1/usr/lib/firmware/radeon/"
+cp radeon/PALM_pfp.bin "$1/usr/lib/firmware/radeon/"
+cp radeon/SUMO_rlc.bin "$1/usr/lib/firmware/radeon/"
+cp radeon/SUMO_uvd.bin "$1/usr/lib/firmware/radeon/"
