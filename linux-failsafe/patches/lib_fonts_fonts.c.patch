@@ -1,0 +1,12 @@
+--- fonts.c
++++ fonts.c_
+@@ -60,6 +60,9 @@
+ #ifdef CONFIG_FONT_6x8
+ 	&font_6x8,
+ #endif
++#ifdef CONFIG_FONT_LEMON
++	&font_lemon,
++#endif
+ };
+ 
+ #define num_fonts ARRAY_SIZE(fonts)
