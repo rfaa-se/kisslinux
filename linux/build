@@ -1,0 +1,29 @@
+#!/bin/sh -e
+
+[ -f /proc/config.gz ] || (echo "CONFIG_IKCONFIG and CONFIG_IKCONFIG_PROC must be enabled in kernel" && exit 1)
+
+echo "Copying and decompressing current configuration"
+cp /proc/config.gz .
+gzip -d config.gz
+mv config .config
+
+echo "Moving lemon font to lib/fonts/"
+mv font_lemon.c lib/fonts/
+
+echo "Patching support for lemon font"
+patch -u lib/fonts/Kconfig -i lib_fonts_Kconfig.patch
+patch -u lib/fonts/Makefile -i lib_fonts_Makefile.patch
+patch -u lib/fonts/fonts.c -i lib_fonts_fonts.c.patch
+patch -u include/linux/font.h -i include_linux_font.h.patch
+
+echo "Running make olddefconfig with current configuration as base"
+make olddefconfig
+
+echo "Building source"
+make
+
+echo "Running make install"
+mkdir "$1/boot"
+INSTALL_PATH="$1/boot" make install
+mv "$1/boot/vmlinuz" "$1/boot/vmlinuz-$2"
+mv "$1/boot/System.map" "$1/boot/System.map-$2"

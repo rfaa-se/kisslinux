@@ -1,0 +1,8 @@
+#!/bin/sh -e
+
+echo "Updating EFI"
+
+KERNEL=$(ls boot | grep vmlinuz)
+
+efibootmgr -B -L "KISS" -q
+efibootmgr -c -L "KISS" -d /dev/sda -p 1 -l "\\$KERNEL" -u 'root=/dev/sda2 quiet' -q
