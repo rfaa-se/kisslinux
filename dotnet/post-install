@@ -1,0 +1,3 @@
+#!/bin/sh -e
+
+[ -f /usr/bin/dotnet ] || ln -s /usr/share/dotnet/dotnet /usr/bin/
