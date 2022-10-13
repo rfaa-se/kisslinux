@@ -1,6 +1,6 @@
 https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-VERSION.tar.xz
 files/font_lemon.c
-patches/lib_fonts_Kconfig.patch
-patches/lib_fonts_Makefile.patch
-patches/lib_fonts_fonts.c.patch
-patches/include_linux_font.h.patch
+patches/Kconfig.patch
+patches/Makefile.patch
+patches/fonts.c.patch
+patches/font.h.patch

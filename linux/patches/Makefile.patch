@@ -1,5 +1,5 @@
---- Makefile
-+++ Makefile_
+--- a/lib/fonts/Makefile
++++ b/lib/fonts/Makefile
 @@ -16,6 +16,7 @@
  font-objs-$(CONFIG_FONT_6x10)      += font_6x10.o
  font-objs-$(CONFIG_FONT_TER16x32)  += font_ter16x32.o

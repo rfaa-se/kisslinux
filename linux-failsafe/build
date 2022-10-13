@@ -11,10 +11,9 @@ echo "Moving lemon font to lib/fonts/"
 mv font_lemon.c lib/fonts/
 
 echo "Patching support for lemon font"
-patch -u lib/fonts/Kconfig -i lib_fonts_Kconfig.patch
-patch -u lib/fonts/Makefile -i lib_fonts_Makefile.patch
-patch -u lib/fonts/fonts.c -i lib_fonts_fonts.c.patch
-patch -u include/linux/font.h -i include_linux_font.h.patch
+for patch in *.patch; do
+    patch -p1 < "$patch"
+done
 
 echo "Running make olddefconfig with current configuration as base"
 make olddefconfig

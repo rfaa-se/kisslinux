@@ -1,5 +1,5 @@
---- Kconfig
-+++ Kconfig_
+--- a/lib/fonts/Kconfig
++++ b/lib/fonts/Kconfig
 @@ -125,6 +125,15 @@
  	help
  	  This font is useful for small displays (OLED).

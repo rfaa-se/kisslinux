@@ -1,5 +1,5 @@
---- fonts.c
-+++ fonts.c_
+--- a/lib/fonts/fonts.c
++++ b/lib/fonts/fonts.c
 @@ -60,6 +60,9 @@
  #ifdef CONFIG_FONT_6x8
  	&font_6x8,
