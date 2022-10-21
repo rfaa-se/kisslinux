@@ -4,5 +4,7 @@ echo "Updating EFI"
 
 KERNEL=$(ls boot | grep vmlinuz)
 
+mount -t efivarfs none /sys/firmware/efi/efivars
 efibootmgr -B -L "KISS" -q
 efibootmgr -c -L "KISS" -d /dev/sda -p 1 -l "\\$KERNEL" -u 'root=/dev/sda2 quiet' -q
+umount /sys/firmware/efi/efivars
