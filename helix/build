@@ -1,0 +1,16 @@
+#!/bin/sh -e
+
+export CARGO_PROFILE_RELEASE_LTO="true"
+
+cargo fetch --locked
+
+cargo build --frozen --release
+
+mkdir -p "$1/usr/bin/"
+cp target/release/hx "$1/usr/bin/"
+
+mkdir -p "$1/usr/share/helix/"
+cp -R runtime "$1/usr/share/helix/"
+
+mkdir -p "$1/etc/profile.d/"
+cp helix_runtime.sh "$1/etc/profile.d/"
