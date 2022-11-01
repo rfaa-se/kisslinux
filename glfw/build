@@ -1,0 +1,12 @@
+#!/bin/sh -e
+
+cmake -B build \
+	-D GLFW_USE_WAYLAND=1 \
+	-D BUILD_SHARED_LIBS=1 \
+	-D CMAKE_INSTALL_LIBDIR=lib \
+	-D CMAKE_INSTALL_PREFIX=/usr \
+	-D CMAKE_BUILD_TYPE=Release
+
+cmake --build build
+
+DESTDIR="$1" cmake --install build
