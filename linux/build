@@ -7,6 +7,8 @@ cp /proc/config.gz .
 gzip -d config.gz
 mv config .config
 
+sleep 1m
+
 echo "Moving lemon font to lib/fonts/"
 mv font_lemon.c lib/fonts/
 
@@ -17,8 +19,9 @@ done
 
 echo "Running make olddefconfig with current configuration as base"
 make olddefconfig
-echo "fix"
+
 sleep 2m
+
 echo "Building source"
 make
 
