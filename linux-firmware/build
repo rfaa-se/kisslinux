@@ -8,3 +8,5 @@ cp radeon/SUMO_uvd.bin "$1/usr/lib/firmware/radeon/"
 
 mkdir -p "$1/usr/lib/firmware/rtl_nic"
 cp rtl_nic/rtl8168e-3.fw "$1/usr/lib/firmware/rtl_nic/"
+
+cp ath3k-1.fw "$1/usr/lib/firmware/"
