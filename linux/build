@@ -7,7 +7,21 @@ cp /proc/config.gz .
 gzip -d config.gz
 mv config .config
 
+echo "Fix your config, you have 5 minutes"
 sleep 1m
+
+for i in 4 3 2 1; do
+    echo "$i minute$([ $i -ne 1 ] && echo 's') remaining"
+    sleep 1m
+done
+
+echo "Resuming build in 10s"
+sleep 5
+
+for i in 5 4 3 2 1; do
+    echo $i
+    sleep 1
+done
 
 echo "Moving lemon font to lib/fonts/"
 mv font_lemon.c lib/fonts/
@@ -19,8 +33,6 @@ done
 
 echo "Running make olddefconfig with current configuration as base"
 make olddefconfig
-
-sleep 2m
 
 echo "Building source"
 make
