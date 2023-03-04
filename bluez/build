@@ -1,0 +1,13 @@
+#!/bin/sh -e
+./configure \
+    --prefix=/usr \
+    --exec-prefix=/usr \
+    --disable-systemd \
+    --enable-library \
+    --disable-obex \
+    --mandir=/usr/share/man \
+    --disable-cups \
+    --with-udevdir=/dev
+
+make
+make DESTDIR="$1" install
