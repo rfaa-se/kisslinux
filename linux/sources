@@ -4,5 +4,5 @@ patches/Kconfig.patch
 patches/Makefile.patch
 patches/fonts.c.patch
 patches/font.h.patch
-patches/ath3k.c.patch
 patches/btusb.c.patch
+patches/ath3k.c.patch

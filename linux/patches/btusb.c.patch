@@ -6,7 +6,7 @@ index 2ad4efd..907eb4e 100644
  	{ USB_DEVICE(0x0489, 0xe078), .driver_info = BTUSB_ATH3012 },
  	{ USB_DEVICE(0x0489, 0xe095), .driver_info = BTUSB_ATH3012 },
  	{ USB_DEVICE(0x04c5, 0x1330), .driver_info = BTUSB_ATH3012 },
-+	{ USB_DEVICE(0x04ca, 0x3002), .driver_info = BTUSB_ATH3012 },
++	{ USB_DEVICE(0x04ca, 0x3002), .driver_info = BTUSB_IGNORE },
  	{ USB_DEVICE(0x04ca, 0x3004), .driver_info = BTUSB_ATH3012 },
  	{ USB_DEVICE(0x04ca, 0x3005), .driver_info = BTUSB_ATH3012 },
  	{ USB_DEVICE(0x04ca, 0x3006), .driver_info = BTUSB_ATH3012 },
