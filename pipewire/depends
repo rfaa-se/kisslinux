@@ -1,0 +1,14 @@
+alsa-lib
+bluez
+dbus
+glib
+libsndfile
+libudev-zero
+linux-headers make
+lua make
+meson make
+ncurses
+opus
+pkgconf make
+readline
+sbc
