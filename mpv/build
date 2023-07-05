@@ -1,6 +1,6 @@
 #!/bin/sh -e
 
-meson \
+meson setup \
     --prefix=/usr \
     -Dalsa=enabled \
     -Dlibmpv=true \
