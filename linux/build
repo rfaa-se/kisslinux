@@ -7,7 +7,7 @@ cp /proc/config.gz .
 gzip -d config.gz
 mv config .config
 
-if [ "$KISS_LINUX_WAIT" -eq 1 ]; then
+if [ "${KISS_WAIT:-0}" -eq 1 ]; then
     echo "Fix your config, you have 5 minutes"
     sleep 1m
 
@@ -28,7 +28,7 @@ fi
 echo "Moving lemon font to lib/fonts/"
 mv font_lemon.c lib/fonts/
 
-echo "Patching support for lemon font"
+echo "Patching..."
 for patch in *.patch; do
     patch -p1 < "$patch"
 done
