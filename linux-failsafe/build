@@ -10,7 +10,7 @@ mv config .config
 echo "Moving lemon font to lib/fonts/"
 mv font_lemon.c lib/fonts/
 
-echo "Patching support for lemon font"
+echo "Patching..."
 for patch in *.patch; do
     patch -p1 < "$patch"
 done

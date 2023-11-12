@@ -2,9 +2,21 @@
 
 echo "Updating EFI"
 
-KERNEL=$(ls boot | grep vmlinuz)
+# get vmlinuz name with version number from the installed manifest
+kernel=$(basename $(grep vmlinuz $(dirname $0)/manifest))
 
-mount -t efivarfs none /sys/firmware/efi/efivars
+# check if already mounted
+mounted=$(mount | grep efivarfs > /dev/null; echo $?)
+
+if [ "${mounted}" -ne 0 ]; then
+  echo "Mounting efivarfs..."
+  mount -t efivarfs none /sys/firmware/efi/efivars
+fi
+
 efibootmgr -B -L "KISS FAILSAFE" -q
-efibootmgr -c -L "KISS FAILSAFE" -d /dev/sda -p 1 -l "\\$KERNEL" -u 'root=/dev/sda2 quiet' -q
-umount /sys/firmware/efi/efivars
+efibootmgr -c -L "KISS FAILSAFE" -d /dev/sda -p 1 -l "\\$kernel" -u 'root=/dev/sda2 quiet' -q
+
+if [ "$mounted" -ne 0 ]; then
+  echo "Unmounting efivarfs..."
+  umount /sys/firmware/efi/efivars
+fi

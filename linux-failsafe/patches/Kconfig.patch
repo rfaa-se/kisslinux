@@ -1,6 +1,8 @@
+diff --git a/lib/fonts/Kconfig b/lib/fonts/Kconfig
+index c035fde..66e9d10 100644
 --- a/lib/fonts/Kconfig
 +++ b/lib/fonts/Kconfig
-@@ -125,6 +125,15 @@
+@@ -125,9 +125,19 @@ config FONT_6x8
  	help
  	  This font is useful for small displays (OLED).
  
@@ -16,7 +18,11 @@
  config FONT_AUTOSELECT
  	def_bool y
  	depends on !FONT_8x8
-@@ -139,6 +148,7 @@
++	depends on !FONT_8x16
+ 	depends on !FONT_6x11
+ 	depends on !FONT_7x14
+ 	depends on !FONT_PEARL_8x8
+@@ -139,6 +149,6 @@ config FONT_AUTOSELECT
  	depends on !FONT_10x18
  	depends on !FONT_TER16x32
  	depends on !FONT_6x8
