@@ -1,4 +1,4 @@
-https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.11.tar.xz
+https://cdn.kernel.org/pub/linux/kernel/v6.x/linux-6.12.tar.xz
 files/font_lemon.c
 patches/Kconfig.patch
 patches/Makefile.patch
