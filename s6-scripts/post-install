@@ -1,0 +1,8 @@
+#!/bin/sh
+
+grep ^s6log: /etc/passwd >/dev/null 2>&1 || adduser -HD s6log
+
+echo "don't forget to run the following commands:"
+echo "  s6-linux-init-maker -1 -G \"/sbin/getty 38400 tty5\" current -d /dev"
+echo "  mv current /etc/s6-linux-init/"
+echo "  s6-db-reload"

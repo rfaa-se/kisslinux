@@ -1,0 +1,8 @@
+#!/bin/execlineb -P
+if {
+    mount -t cgroup2 none -o nodev,noexec,nosuid,nsdelegate /sys/fs/cgroup
+}
+redirfd -r 0 /sys/fs/cgroup/cgroup.controllers
+redirfd -w 1 /sys/fs/cgroup/cgroup.subtree_control
+forstdin -EN -d" " CONTROLLER
+  printf +${CONTROLLER}

@@ -1,0 +1,36 @@
+#!/bin/sh
+
+set -eu
+
+: "${DESTDIR:=$1}"
+: "${PREFIX:=/usr}"
+
+mkdir -p "$DESTDIR/$PREFIX"
+
+cp -R etc "$DESTDIR/"
+cp -R bin "$DESTDIR/$PREFIX"
+
+
+mkdir -p "$DESTDIR/etc/s6-rc/rc" "$DESTDIR/$PREFIX/share/s6-sv"
+
+cp -R adminsv "$DESTDIR/etc/s6-rc/"
+cp -R config "$DESTDIR/etc/s6-rc/"
+
+cp -R sv/*/* "$DESTDIR/$PREFIX/share/s6-sv/"
+
+ln -s "$PREFIX/share/s6-sv" "$DESTDIR/etc/s6-rc/sv"
+
+# we won't be using docker nor tty3-6, let's not include them
+rm -rf "$DESTDIR/etc/s6-rc/config/tty3.conf"
+rm -rf "$DESTDIR/etc/s6-rc/config/tty4.conf"
+rm -rf "$DESTDIR/etc/s6-rc/config/tty5.conf"
+rm -rf "$DESTDIR/etc/s6-rc/config/tty6.conf"
+rm -rf "$DESTDIR/etc/s6-rc/config/docker.conf"
+
+rm -rf "$DESTDIR/$PREFIX/share/s6-sv/tty3"
+rm -rf "$DESTDIR/$PREFIX/share/s6-sv/tty4"
+rm -rf "$DESTDIR/$PREFIX/share/s6-sv/tty5"
+rm -rf "$DESTDIR/$PREFIX/share/s6-sv/tty6"
+rm -rf "$DESTDIR/$PREFIX/share/s6-sv/docker-log"
+rm -rf "$DESTDIR/$PREFIX/share/s6-sv/docker-srv"
+

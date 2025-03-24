@@ -1,0 +1,23 @@
+diff --git a/lib/common.sh b/lib/common.sh
+index dd14bb9..1435536 100644
+--- a/lib/common.sh
++++ b/lib/common.sh
+@@ -3,14 +3,10 @@
+ #{{{ common
+ 
+ check_root() {
+-    [ "$(id -u)" = 0 ] && return
+-    if [ -f /usr/bin/sudo ]; then
+-        # shellcheck disable=SC2086
+-        exec sudo -- "$0" ${OPTS}
+-    else
+-        # shellcheck disable=2154
+-        exec su root -c "$0 ${OPTS}"
+-    fi
++    [ "$(id -u)" = 0 ] || {
++        printf "$0: must be run as root\n"
++        exit 1
++    }
+ }
+ 
+ # }}}

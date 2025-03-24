@@ -1,0 +1,148 @@
+#!/bin/sh
+#
+# Copyright (C) 2020-2022 dudemanguy@artixlinux.org
+# Copyright (C) 2022 artoo@artixlinux.org
+# Copyright (C) 2022 Artix Linux Developers
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+#!/sh/hint
+
+#{{{ common
+
+check_root() {
+    [ "$(id -u)" = 0 ] || {
+        printf "$0: must be run as root\n"
+        exit 1
+    }
+}
+
+# }}}
+
+
+# {{{ functions
+
+finish_msg() {
+    printf "==> Switched to database (%s)\n" "${DBPATH}"-"${TIMESTAMP}"
+    if [ "${RMDB}" -eq 0 ]; then
+        printf "    Remove any old unwanted/unneeded database directories in %s\n" "${RCPATH}"
+    fi
+}
+
+remove_databases() {
+    for dir in "${RCPATH}"/*; do
+        if [ "$dir" != "${DBPATH}"-"${TIMESTAMP}" ] && [ "$dir" != "${DBPATH}" ]; then
+            rm -r "$dir"
+        fi
+    done
+}
+
+use_user_paths() {
+    RCPATH="${USERPATH}/s6-rc/rc"
+    SVPATH="${USERPATH}/s6-rc/sv"
+    RUNPATH="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/s6-rc"
+    SVDIRS="${RUNPATH}/servicedirs"
+    DBPATH="${RCPATH}/compiled"
+}
+
+load_conf() {
+    conf="${SYSPATH}/s6-db-reload.conf"
+    [ -f "$conf" ] || return 1
+    # shellcheck source=/etc/s6-rc/s6-db-reload.conf
+    [ -r "$conf" ] && . "$conf"
+
+    TIMESTAMP=${TIMESTAMP:-$(date +%s%N)}
+
+    USERPATH=${USERPATH:-${XDG_DATA_HOME:-$HOME/.local/share}}
+
+    return 0
+}
+
+check_db() {
+    _args="${DBPATH}-${TIMESTAMP} ${SVPATH}"
+    [ "${USERDB}" -eq 1 ] || _args="$_args ${ADMINSVPATH}"
+    # shellcheck disable=SC2086
+    if ! s6-rc-compile $_args; then
+        printf 'Error compiling database. Please double check the %s directories.\n' "${ADMINSVPATH}"
+        exit 1
+    fi
+}
+
+update_database() {
+    check_db
+    if [ -e "${RUNPATH}" ]; then
+        for dir in "${SVDIRS}"/*; do
+            if [ -e "${dir}/down" ]; then
+                s6-svc -x "${dir}"
+            fi
+        done
+        if [ "${USERDB}" -eq 0 ]; then
+            s6-rc-update -f "${CONVFILE}" "${DBPATH}"-"${TIMESTAMP}"
+            truncate -s 0 "${CONVFILE}"
+        else
+            s6-rc-update -l "${RUNPATH}" "${DBPATH}"-"${TIMESTAMP}"
+        fi
+    fi
+    if [ -d "${DBPATH}" ]; then
+        ln -sf "${DBPATH}"-"${TIMESTAMP}" "${DBPATH}"/compiled
+        mv -f "${DBPATH}"/compiled "${RCPATH}"
+    else
+        ln -sf "${DBPATH}"-"${TIMESTAMP}" "${DBPATH}"
+    fi
+}
+
+# }}}
+
+usage() {
+    printf "Usage: s6-db-reload [options]\n"
+    printf "    -r              delete all old databases\n"
+    printf "    -u              use user database\n"
+    printf "    -h              show this help message\n"
+    exit "$1"
+}
+
+# main
+
+SYSPATH='/etc/s6-rc'
+RUNPATH='/run/s6-rc'
+
+RCPATH="${SYSPATH}/rc"
+DBPATH="${RCPATH}/compiled"
+SVPATH="${SYSPATH}/sv"
+CONVFILE="${SYSPATH}/config/convfile"
+ADMINSVPATH="${SYSPATH}/adminsv"
+SVDIRS="${RUNPATH}/servicedirs"
+
+USERDB=0
+RMDB=0
+
+load_conf
+
+OPTS="$*"
+
+while getopts urh arg; do
+    case "${arg}" in
+        u) USERDB=1 ;;
+        r) RMDB=1 ;;
+        h|?) usage 0 ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
+if [ "${USERDB}" -eq 1 ]; then
+    use_user_paths
+else
+    check_root
+fi
+update_database
+if [ "${RMDB}" -eq 1 ]; then
+    remove_databases
+fi
+finish_msg

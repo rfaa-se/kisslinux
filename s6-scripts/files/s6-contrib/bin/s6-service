@@ -1,0 +1,128 @@
+#!/bin/sh
+#
+# Copyright (C) 2020-2022 dudemanguy@artixlinux.org
+# Copyright (C) 2022 artoo@artixlinux.org
+# Copyright (C) 2022 Artix Linux Developers
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+#!/sh/hint
+
+#{{{ common
+
+check_root() {
+    [ "$(id -u)" = 0 ] || {
+        printf "$0: must be run as root\n"
+        exit 1
+    }
+}
+
+# }}}
+
+
+# {{{ functions
+
+bundle_err_msg() {
+    printf "'%s' does not exist in the given paths.\n" "${BUNDLE}"
+    exit 1
+}
+
+permissions_err_msg() {
+    printf "Insufficient permissions. Aborting.\n"
+    exit 1
+}
+
+service_err_msg() {
+    printf "'%s' is not in '%s'. Skipping.\n" "${1}" "${BUNDLE}"
+}
+
+cmd_help() {
+    printf "%s help\n" "${CMD}"
+    printf "%s add bundlename contents...\n" "${CMD}"
+    printf "%s delete bundlename contents...\n" "${CMD}"
+    exit "$1"
+}
+
+usage() {
+    printf "%s: usage: %s [ -c compiled ] command... (use %s help for more information)\n" "${CMD}" "${CMD}" "${CMD}"
+    exit "$1"
+}
+
+cmd_add() {
+    if [ -n "${CUSTOMPATH}" ]; then
+        path=$(find "${CUSTOMPATH}" -type d -name "${BUNDLE}")
+    else
+        path=$(find "${SVPATH}" "${ADMINSVPATH}" -type d -name "${BUNDLE}")
+    fi
+    if [ -z "${path}" ]; then
+        bundle_err_msg
+        exit 1
+    fi
+    for sv in ${CONTENTS}; do
+        if ! touch "${path}"/contents.d/"$sv"; then
+            permissions_err_msg
+        fi
+    done
+}
+
+cmd_delete() {
+    if [ -n "${CUSTOMPATH}" ]; then
+        path=$(find "${CUSTOMPATH}" -type d -name "${BUNDLE}")
+    else
+        path=$(find "${SVPATH}" "${ADMINSVPATH}" -type d -name "${BUNDLE}")
+    fi
+    if [ -z "${path}" ]; then
+        bundle_err_msg
+        exit 1
+    fi
+    for sv in ${CONTENTS}; do
+        if ! [ -f "${path}"/contents.d/"$sv" ]; then
+            service_err_msg "$sv"
+            continue
+        fi
+        if ! rm "${path}"/contents.d/"$sv"; then
+            permissions_err_msg
+        fi
+    done
+}
+
+# }}}
+
+SYSPATH='/etc/s6-rc'
+
+SVPATH="${SYSPATH}/sv"
+ADMINSVPATH="${SYSPATH}/adminsv"
+CUSTOMPATH=""
+
+CMD="${0##*/}"
+OPTS="$*"
+
+while getopts c:h arg; do
+    case "${arg}" in
+        c) CUSTOMPATH="$OPTARG" ;;
+        h|?) usage 0 ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
+[ -n "${CUSTOMPATH}" ] || check_root
+ACTION="$1"
+[ -n "${ACTION}" ] || usage 1
+[ "${ACTION}" = 'help' ] && cmd_help 0
+BUNDLE="$2"
+[ -n "${BUNDLE}" ] || usage 1
+shift 2
+CONTENTS="$*"
+[ -n "${CONTENTS}" ] || usage 1
+
+case "${ACTION}" in
+    add) cmd_add  ;;
+    delete) cmd_delete ;;
+esac

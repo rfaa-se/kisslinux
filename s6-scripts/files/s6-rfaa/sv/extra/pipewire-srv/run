@@ -1,0 +1,6 @@
+#!/bin/execlineb -P
+envfile /etc/s6-rc/config/pipewire.conf
+importas -uiS USER
+importas -iS XDG_RUNTIME_DIR
+fdmove -c 2 1
+s6-setuidgid ${USER} exec dbus-run-session pipewire

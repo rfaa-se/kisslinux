@@ -1,0 +1,8 @@
+#!/bin/execlineb -P
+envfile /etc/s6-rc/config/tty6.conf
+importas -uD "yes" SPAWN SPAWN
+importas -sCuD "" ARGS ARGS
+importas -sCuD "agetty" GETTY GETTY
+if -t { test -e /dev/tty6 }
+if -t { test ${SPAWN} = "yes" }
+	exec ${GETTY} -L -8 tty6 115200 ${ARGS}

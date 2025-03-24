@@ -1,0 +1,30 @@
+diff --git a/script/s6-db-reload.in b/script/s6-db-reload.in
+index e929502..a7d4ddb 100644
+--- a/script/s6-db-reload.in
++++ b/script/s6-db-reload.in
+@@ -58,16 +58,7 @@ check_db() {
+     [ "${USERDB}" -eq 1 ] || _args="$_args ${ADMINSVPATH}"
+     # shellcheck disable=SC2086
+     if ! s6-rc-compile $_args; then
+-        printf 'Error compiling database. Trying the system fallback paths!\n'
+-        [ "${USERDB}" -eq 1 ] || printf 'Please double check the %s directories.\n' "${ADMINSVPATH}"
+-        if [ "${USERDB}" -eq 0 ]; then
+-            _args="${DBPATH}-${TIMESTAMP} ${SVPATH} ${FALLBACKSVPATH}"
+-            # shellcheck disable=SC2086
+-            if ! s6-rc-compile $_args; then
+-                printf 'The system fallback compilation failed. Something is really wrong with your service directories!\n'
+-                printf "Check your %s and %s directories.\n" "${SVPATH}" "${FALLBACKSVPATH}"
+-            fi
+-        fi
++        printf 'Error compiling database. Please double check the %s directories.\n' "${ADMINSVPATH}"
+         exit 1
+     fi
+ }
+@@ -115,7 +106,6 @@ DBPATH="${RCPATH}/compiled"
+ SVPATH="${SYSPATH}/sv"
+ CONVFILE="${SYSPATH}/config/convfile"
+ ADMINSVPATH="${SYSPATH}/adminsv"
+-FALLBACKSVPATH="${SYSPATH}/fallbacksv"
+ SVDIRS="${RUNPATH}/servicedirs"
+ 
+ USERDB=0

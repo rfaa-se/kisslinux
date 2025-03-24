@@ -1,0 +1,6 @@
+#!/bin/execlineb -P
+envfile /etc/s6-rc/config/bluetoothd.conf
+importas -sCuD "n3 s2000000 T" DIRECTIVES DIRECTIVES
+if { if -t { test -f /var/log/bluetoothd } rm /var/log/bluetoothd }
+if { install -d -o s6log -g s6log /var/log/bluetoothd }
+s6-setuidgid s6log exec -c s6-log -d3 -b -- ${DIRECTIVES} /var/log/bluetoothd

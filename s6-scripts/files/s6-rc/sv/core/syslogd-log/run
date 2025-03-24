@@ -1,0 +1,21 @@
+#!/bin/execlineb -P
+if { install -d -o s6log -g s6log /var/log/syslogd }
+s6-setuidgid s6log
+multisubstitute
+{
+  define T t
+  define dir /var/log/syslogd
+}
+exec -c
+s6-log -d3 --
+
+ - +^auth\\. +^authpriv\\.  $T ${dir}/secure
+ - +^cron\\.  $T ${dir}/cron
+ - +^daemon\\.  $T ${dir}/daemon
+ - +^[[:alnum:]]*\\.debug:  $T ${dir}/debug
+ - +^[[:alnum:]]*\\.err: +^[[:alnum:]]*\\.error: +^[[:alnum:]]*\\.emerg: +^[[:alnum:]]*\\.alert: +^[[:alnum:]]*\\.crit:  $T ${dir}/errors
+ - +^kern\\.  $T ${dir}/kernel
+ - +mail\\.  $T ${dir}/mail
+ - +user\\.  $T ${dir}/user
+ - +^[[:alnum:]]*\\.info: +^[[:alnum:]]*\\.notice: +^[[:alnum:]]*\\.warn: -^auth\\. -^authpriv\\. -^cron\\. -daemon\\. -mail\\.  $T ${dir}/messages
+ + -^auth\\. -^authpriv\\.  $T ${dir}/everything

@@ -1,0 +1,47 @@
+diff --git a/script/s6-db-reload.in b/script/s6-db-reload.in
+index e929502..713d106 100644
+--- a/script/s6-db-reload.in
++++ b/script/s6-db-reload.in
+@@ -33,8 +33,8 @@ remove_databases() {
+ }
+ 
+ use_user_paths() {
+-    RCPATH="${USERPATH}/s6/rc"
+-    SVPATH="${USERPATH}/s6/sv"
+-    RUNPATH="${RUNPATH}-$(id -u)"
++    RCPATH="${USERPATH}/s6-rc/rc"
++    SVPATH="${USERPATH}/s6-rc/sv"
++    RUNPATH="${XDG_RUNTIME_DIR:-/run/user/$(id -u)}/s6-rc"
+     SVDIRS="${RUNPATH}/servicedirs"
+     DBPATH="${RCPATH}/compiled"
+@@ -43,7 +43,7 @@ use_user_paths() {
+ load_conf() {
+     conf="${SYSPATH}/s6-db-reload.conf"
+     [ -f "$conf" ] || return 1
+-    # shellcheck source=/etc/s6/s6-db-reload.conf
++    # shellcheck source=/etc/s6-rc/s6-db-reload.conf
+     [ -r "$conf" ] && . "$conf"
+ 
+     TIMESTAMP=${TIMESTAMP:-$(date +%s%N)}
+@@ -107,7 +107,7 @@ usage() {
+ 
+ # main
+ 
+-SYSPATH='@sysconfdir@/s6'
++SYSPATH='@sysconfdir@/s6-rc'
+ RUNPATH='@rundir@/s6-rc'
+ 
+ RCPATH="${SYSPATH}/rc"
+diff --git a/script/s6-service.in b/script/s6-service.in
+index 9ce6c3b..950068c 100644
+--- a/script/s6-service.in
++++ b/script/s6-service.in
+@@ -83,7 +83,7 @@ cmd_delete() {
+ 
+ # }}}
+ 
+-SYSPATH='/etc/s6'
++SYSPATH='/etc/s6-rc'
+ 
+ SVPATH="${SYSPATH}/sv"
+ ADMINSVPATH="${SYSPATH}/adminsv"

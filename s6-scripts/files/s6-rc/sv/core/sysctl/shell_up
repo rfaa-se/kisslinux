@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# This is a portable equivalent to 'sysctl --system'
+# following the exact same semantics.
+for conf in /run/sysctl.d/*.conf \
+            /etc/sysctl.d/*.conf \
+            /usr/lib/sysctl.d/*.conf \
+            /etc/sysctl.conf; do
+
+    [ -f "$conf" ] || continue
+
+    # Skip conf files we have already seen (basename match).
+    case $seen in *" ${conf##*/} "*) continue; esac
+    seen=" $seen ${conf##*/} "
+
+    sysctl -p "$conf"
+done

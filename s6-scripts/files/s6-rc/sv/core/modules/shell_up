@@ -1,0 +1,10 @@
+#!/bin/sh
+
+MODULES=/etc/modules
+
+[ -f "$MODULES" ] || exit 0
+
+sed -e 's/\#.*//g' -e '/^[[:space:]]*$/d' "$MODULES" |
+    while read -r module args; do
+        modprobe $module $args
+    done

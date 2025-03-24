@@ -1,0 +1,6 @@
+#!/bin/execlineb -P
+s6-envuidgid -i -- messagebus
+if { install -m755 -g messagebus -o messagebus -d /run/dbus }
+s6-applyuidgid -U --
+fdmove -c 2 1
+exec dbus-daemon --system --nofork --nopidfile

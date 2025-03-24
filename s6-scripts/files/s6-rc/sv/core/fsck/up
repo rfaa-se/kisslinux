@@ -1,0 +1,7 @@
+#!/bin/execlineb -P
+ifelse { redirfd -w 2 /dev/null touch /.dummy } {
+    foreground { rm -f /.dummy }
+    if { echo "Root filesystem mounted read-write!" }
+    exit 1
+}
+fsck -ATat noopts=_netdev

@@ -1,0 +1,7 @@
+#!/bin/execlineb -P
+if {
+    if -t { test -e /var/lib/random-seed }
+        fdmove -c 2 1 redirfd -w 2 /dev/null dd if=/var/lib/random-seed of=/dev/urandom
+}
+umask 077 backtick -n -D "512" -E bytes { cat /proc/sys/kernel/random/poolsize }
+fdmove -c 2 1 redirfd -w 2 /dev/null umask 077 dd if=/dev/urandom of=/var/lib/random-seed count=1 bs=${bytes}
