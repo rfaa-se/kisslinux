@@ -1,9 +1,11 @@
 #!/bin/sh
 
-# install messagebus user
-if ! $(id messagebus &> /dev/null); then
-  echo "adding messagebus user"
-  adduser messagebus -S -D -H -g 'System message bus' -h '/var/run/dbus'
+if ! getent group messagebus >/dev/null 2>&1; then
+  echo "adding messagebus group"
+  addgroup -S messagebus
 fi
-# TODO: adduser 
-# useradd -c 'System message bus' -u 81 -s /sbin/nologin -r -d '/' dbus 2> /dev/null
+
+if ! getent passwd messagebus >/dev/null 2>&1; then
+  echo "adding messagebus user"
+  adduser messagebus -S -D -H -G messagebus -g 'System message bus' -h '/run/dbus'
+fi

@@ -1,22 +1,23 @@
 #!/bin/sh
 
-./configure \
-    --sysconfdir=/etc \
-    --localstatedir=/var \
-    --enable-user-session \
-    --disable-asserts \
-    --prefix=/usr \
-    --without-x \
-    --with-system-socket=/run/dbus/system_bus_socket \
-    --disable-doxygen-docs \
-    --with-system-pid-file=/run/dbus/pid \
-    --with-console-auth-dir=/run/console \
-    --with-systemduserunitdir=no \
-    --with-systemdsystemunitdir=no
+export DESTDIR="$1"
 
-make
-make DESTDIR="$1" install
+meson setup \
+    -Dsysconfdir=/etc \
+    -Dlocalstatedir=/var \
+    -Duser_session=true \
+    -Dprefix=/usr \
+    -Dx11_autolaunch=disabled \
+    -Dsystem_socket=/run/dbus/system_socket \
+    -Ddoxygen_docs=disabled \
+    -Dsystem_pid_file=/run/dbus/pid \
+    -Dsystemd=disabled \
+    build
 
+ninja -C build
+ninja -C build install
+
+# Currently running s6, no need for this
 # Install service.
-install -Dm755 dbus.run "$1/etc/sv/dbus/run"
-ln -s /run/runit/supervise.dbus "$1/etc/sv/dbus/supervise"
+#install -Dm755 dbus.run "$1/etc/sv/dbus/run"
+#ln -s /run/runit/supervise.dbus "$1/etc/sv/dbus/supervise"
