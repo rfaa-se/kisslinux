@@ -1,22 +1,38 @@
 #!/bin/sh -e
 
-echo "Updating EFI"
+echo "Updating EFI..."
 
 # get vmlinuz name with version number from the installed manifest
-kernel=$(basename $(grep vmlinuz $(dirname $0)/manifest))
+kernel=$(basename "$(grep vmlinuz "$(dirname "$0")"/manifest)")
 
 # check if already mounted
-mounted=$(mount | grep efivarfs > /dev/null; echo $?)
+mounted=0
+options=$(findmnt -n -o OPTIONS /sys/firmware/efi/efivars) || mounted=$?
+readwrite=0
 
-if [ "${mounted}" -ne 0 ]; then
+# mount efivarfs if required
+if [ "${mounted}" -eq 0 ]; then
+  # need to be mounted as read+write
+  readwrite=$(echo "${options}" | grep -E -q '^rw,|,rw|,rw$|^rw$'; echo $?)
+  if [ "${readwrite}" -ne 0 ]; then
+    echo "Remounting efivarfs with rw..."
+    mount -o remount,rw /sys/firmware/efi/efivars    
+  fi
+else
+  # this is how the s6 scripts mount efivarfs
   echo "Mounting efivarfs..."
-  mount -t efivarfs none /sys/firmware/efi/efivars
+  mount -n -t efivarfs -o rw efivarfs /sys/firmware/efi/efivars
 fi
 
+echo "Updating EFI entries..."
 efibootmgr -B -L "KISS" -q
 efibootmgr -c -L "KISS" -d /dev/sda -p 1 -l "\\$kernel" -u 'root=/dev/sda2 quiet' -q
+echo "Done"
 
-if [ "$mounted" -ne 0 ]; then
+if [ "${mounted}" -ne 0 ]; then
   echo "Unmounting efivarfs..."
   umount /sys/firmware/efi/efivars
+elif [ "${readwrite}" -ne 0 ]; then
+  echo "Remounting efivarfs with ${options}..."
+  mount -o remount,"${options}" /sys/firmware/efi/efivars
 fi
