@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+export CARGO_PROFILE_RELEASE_LTO="true"
+
+cargo fetch --locked
+
+cargo build --frozen --release --manifest-path crates/wgsl-analyzer/Cargo.toml
+
+mkdir -p "$1/usr/bin"
+cp target/release/wgsl-analyzer "$1/usr/bin/"
