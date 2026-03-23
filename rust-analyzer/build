@@ -3,7 +3,7 @@
 export CARGO_PROFILE_RELEASE_LTO="true"
 
 cargo fetch --locked
-
+#TODO: cargo xtask install --proc-macro-server
 cargo build --frozen --release --manifest-path crates/rust-analyzer/Cargo.toml
 
 mkdir -p "$1/usr/bin"
