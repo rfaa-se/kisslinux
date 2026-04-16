@@ -1,10 +1,12 @@
+diff --git a/lib/fonts/Makefile b/lib/fonts/Makefile
+index 30a85a429..de5008a05 100644
 --- a/lib/fonts/Makefile
 +++ b/lib/fonts/Makefile
-@@ -16,6 +16,7 @@
- font-objs-$(CONFIG_FONT_6x10)      += font_6x10.o
+@@ -17,6 +17,7 @@ font-objs-$(CONFIG_FONT_6x10)      += font_6x10.o
+ font-objs-$(CONFIG_FONT_TER10x18)  += font_ter10x18.o
  font-objs-$(CONFIG_FONT_TER16x32)  += font_ter16x32.o
  font-objs-$(CONFIG_FONT_6x8)       += font_6x8.o
-+font-objs-$(CONFIG_FONT_LEMON)   += font_lemon.o
++font-objs-$(CONFIG_FONT_LEMON)     += font_lemon.o
  
  font-objs += $(font-objs-y)
  

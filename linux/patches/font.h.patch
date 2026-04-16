@@ -1,19 +1,21 @@
+diff --git a/include/linux/font.h b/include/linux/font.h
+index fd8625cd7..fb8253a6e 100644
 --- a/include/linux/font.h
 +++ b/include/linux/font.h
-@@ -35,6 +35,7 @@
- #define FONT6x10_IDX	10
+@@ -36,6 +36,7 @@ struct font_desc {
  #define TER16x32_IDX	11
  #define FONT6x8_IDX	12
-+#define LEMON_IDX	13
+ #define TER10x18_IDX	13
++#define LEMON_IDX 	14
  
  extern const struct font_desc	font_vga_8x8,
  			font_vga_8x16,
-@@ -48,7 +49,8 @@
- 			font_mini_4x6,
+@@ -50,7 +51,8 @@ extern const struct font_desc	font_vga_8x8,
  			font_6x10,
  			font_ter_16x32,
--			font_6x8;
-+			font_6x8,
+ 			font_6x8,
+-			font_ter_10x18;
++			font_ter_10x18,
 +			font_lemon;
  
  /* Find a font with a specific name */
