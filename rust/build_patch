@@ -1,0 +1,20 @@
+--- build
++++ build
+@@ -35,7 +35,7 @@
+ python         = "python3"
+ locked-deps    = true
+ vendor         = true
+-tools          = [ "cargo", "rustfmt" ]
++tools          = [ "cargo", "rustfmt", "rust-analyzer-proc-macro-srv", "clippy" ]
+ sanitizers     = false
+ profiler       = false
+ full-bootstrap = false
+@@ -52,7 +52,7 @@
+ src-tarball = false
+ 
+ [rust]
+-backtrace         = false
++backtrace         = true
+ channel           = "stable"
+ codegen-tests     = false
+ codegen-units-std = 1

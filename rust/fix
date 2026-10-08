@@ -1,0 +1,7 @@
+#!/bin/sh
+set -e
+
+echo "copying files..."
+cp -r /var/db/kiss/repos/kiss-community/repo/extra/rust/* .
+patch -p0 < build_patch
+echo "done!"
