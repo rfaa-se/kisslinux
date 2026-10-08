@@ -25,9 +25,6 @@ if [ "${KISS_WAIT:-0}" -eq 1 ]; then
     done
 fi
 
-echo "Moving lemon font to lib/fonts/"
-mv font_lemon.c lib/fonts/
-
 echo "Patching..."
 for patch in *.patch; do
     patch -p1 < "$patch"

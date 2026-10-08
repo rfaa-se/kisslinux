@@ -1,0 +1,28 @@
+diff --git a/drivers/bluetooth/ath3k.c b/drivers/bluetooth/ath3k.c
+index fc796f1..72d8203 100644
+--- a/drivers/bluetooth/ath3k.c
++++ b/drivers/bluetooth/ath3k.c
+@@ -117,6 +117,9 @@ static const struct usb_device_id ath3k_table[] = {
+ 	{ USB_DEVICE(0x0489, 0xE036) },
+ 	{ USB_DEVICE(0x0489, 0xE03C) },
+ 
++	/* Atheros AR5B195 with sflash firmware */
++	{ USB_DEVICE(0x04ca, 0x3002) },
++
+ 	{ }	/* Terminating entry */
+ };
+ 
+diff --git a/drivers/bluetooth/btusb.c b/drivers/bluetooth/btusb.c
+index 87d50ef..0177a65 100644
+--- a/drivers/bluetooth/btusb.c
++++ b/drivers/bluetooth/btusb.c
+@@ -269,6 +269,9 @@ static const struct usb_device_id quirks_table[] = {
+ 	{ USB_DEVICE(0x0489, 0xe036), .driver_info = BTUSB_ATH3012 },
+ 	{ USB_DEVICE(0x0489, 0xe03c), .driver_info = BTUSB_ATH3012 },
+ 
++	/* Atheros AR5B195 with sflash firmware */
++	{ USB_DEVICE(0x04ca, 0x3002), .driver_info = BTUSB_IGNORE },
++
+ 	/* QCA ROME chipset */
+ 	{ USB_DEVICE(0x0cf3, 0x535b), .driver_info = BTUSB_QCA_ROME |
+ 						     BTUSB_WIDEBAND_SPEECH },
