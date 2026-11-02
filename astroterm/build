@@ -1,0 +1,10 @@
+#!/bin/sh -e
+
+export DESTDIR="$1"
+
+mv BSC5 data/bsc5
+meson setup \
+  -Dprefix=/usr \
+  build
+ninja -C build
+ninja -C build install
